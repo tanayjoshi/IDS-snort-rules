@@ -1,0 +1,17 @@
+
+alert icmp any any -> any any (msg:"Ping with TTL: 100";)
+
+alert tcp 192.168.65.0/24 any -> 192.168.65.0/24 any (flags:A; ack:0; msg: "Potential Ack Scan"; sid: 10001;)
+
+alert tcp any any -> any any (flags:R; msg: "ACK and RST - Potential Ack Scan";)
+
+alert tcp any :7000 -> any any (flags:AF; msg: "Graphon";)
+alert tcp any :1260 -> any any (flags:F; msg: "Graphon";)
+
+alert ftp any any -> any any (msg:"FTP";)
+
+alert udp $EXTERNAL_NET any -> $HOME_NET 1434 (msg: "Potentially Bad Traffic"; content:"|04 01 01 01 01 01 01 01|"; classtype: bad-unknown; sid:9998; rev:1;)
+
+alert udp $EXTERNAL_NET any -> $HOME_NET any (msg: "Teardrop"; fragbits:M; id:242; classtype:attempted-dos; sid:270; rev:6;)
+
+alert udp $EXTERNAL_NET any -> $HOME_NET 1434 (msg: "Slammer Worm activity 2"; content:"|04|"; depth:1; classtype: bad-unknown; sid:9998; rev:1;)
